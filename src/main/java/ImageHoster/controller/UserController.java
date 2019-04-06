@@ -39,10 +39,22 @@ public class UserController {
 
     //This controller method is called when the request pattern is of type 'users/registration' and also the incoming request is of POST type
     //This method calls the business logic and after the user record is persisted in the database, directs to login page
+    // Check has been added to validate the strength of the password. Only if the password meets the required criteria will they be redirected to
+    // the login page, else, an error message is displayed during registration and the user is redirected back to the registration page.
     @RequestMapping(value = "users/registration", method = RequestMethod.POST)
-    public String registerUser(User user) {
-        userService.registerUser(user);
-        return "redirect:/users/login";
+    public String registerUser(User user, Model model) {
+        boolean passwordValid = validatePasswordStrength(user.getPassword());
+        if (!passwordValid) {
+            String error = "Password must contain atleast 1 alphabet, 1 number & 1 special character";
+            model.addAttribute("passwordTypeError", error);
+            user = new User();
+            model.addAttribute("User",  user);
+            return "users/registration";
+        }
+        else {
+            userService.registerUser(user);
+            return "users/login";
+        }
     }
 
     //This controller method is called when the request pattern is of type 'users/login'
@@ -78,5 +90,16 @@ public class UserController {
         List<Image> images = imageService.getAllImages();
         model.addAttribute("images", images);
         return "index";
+    }
+
+    // This function validates that the password entered by the user during registration meets the following requirements:
+    // must contain atleast one alphabet (a-z or A-Z), one number (0-9) and one special character (any character  other than a-z, A-Z, and 0-9)
+    // The use is only registered if the above mentioned criteria is met my the entered password
+    private boolean validatePasswordStrength(String password) {
+        boolean valid = password.matches(".*[a-zA-Z]+.*") && password.matches(".*[0-9]+.*") && password.matches(".*[~!@#$%^&*()_-]+.*");
+        System.out.println("*************** Validity = "+ valid   );
+        //return password.matches("[a-zA-Z]{1,}+[0-9]{1,}+[~!@#$%^&*()_-]{1,}$");
+        return password.matches(".*[a-zA-Z]+.*") && password.matches(".*[0-9]+.*") && password.matches(".*[~!@#$%^&*()_-]+.*");
+
     }
 }
