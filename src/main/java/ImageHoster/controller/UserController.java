@@ -96,10 +96,7 @@ public class UserController {
     // must contain atleast one alphabet (a-z or A-Z), one number (0-9) and one special character (any character  other than a-z, A-Z, and 0-9)
     // The use is only registered if the above mentioned criteria is met my the entered password
     private boolean validatePasswordStrength(String password) {
-        boolean valid = password.matches(".*[a-zA-Z]+.*") && password.matches(".*[0-9]+.*") && password.matches(".*[~!@#$%^&*()_-]+.*");
-        System.out.println("*************** Validity = "+ valid   );
-        //return password.matches("[a-zA-Z]{1,}+[0-9]{1,}+[~!@#$%^&*()_-]{1,}$");
-        return password.matches(".*[a-zA-Z]+.*") && password.matches(".*[0-9]+.*") && password.matches(".*[~!@#$%^&*()_-]+.*");
+        return password.matches(".*[a-zA-Z]+.*") && password.matches(".*[0-9]+.*") && password.matches(".*[^a-zA-Z0-9]+.*");
 
     }
 }
