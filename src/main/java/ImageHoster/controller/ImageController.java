@@ -53,11 +53,9 @@ public class ImageController {
     public String showImage(@PathVariable("imageId") Integer imageId, @PathVariable("title") String title, Model model){
         Image image = imageService.getImage(imageId);
         List<Comment> comments = image.getComments();
-        System.out.println("comments = " + comments);
-        image.setComments(comments);
         model.addAttribute("image", image);
         model.addAttribute("tags", image.getTags());
-        model.addAttribute("comments", image.getComments());
+        model.addAttribute("comments", comments);
         return "images/image";
     }
 
